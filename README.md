@@ -96,16 +96,8 @@ python retail_agent.py
 If no key is found, the script prompts for one (input hidden).
 
 ### Google Colab
-1. Upload `retail_agent.py`.
+1. Upload `Agent.ipynb`.
 2. Add your key as a Colab secret named `GEMINI_API_KEY` and enable notebook access.
-3. Run:
-```python
-!pip install -U google-genai
-%run retail_agent.py
-```
-Use `%run`, not `!python`, because the agent asks for typed input (questions and approvals).
-
----
 
 ## Example questions
 
@@ -169,10 +161,8 @@ Highlights:
 ## Roadmap ideas
 
 - Load products and inventory from a CSV file
-- Persist data in SQLite or Postgres
 - Add an audit log of questions, tool calls and approvals
 - Add a Sales object and a demand forecast function
-- Swap the in-memory store for a graph database such as Neo4j
 
 ---
 
