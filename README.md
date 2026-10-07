@@ -1,8 +1,18 @@
 # 🏪 Retail Ontology Agent
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vijayalakshmish/Agent/blob/main/Agent.ipynb)
+
 A small, beginner-friendly project that shows how an **ontology** makes an AI agent more reliable. The agent answers retail operations questions (low stock, supplier lead times, markdowns) by querying a structured model of the business instead of guessing, and it can only change data through validated, human-approved actions.
 
-Built with Python and the Gemini API. The idea is inspired by the ontology layer in Palantir Foundry/AIP, scaled down so you can read all of it in one sitting.
+Built with Python and the Gemini API. The idea is inspired by the ontology layer in Palantir Foundry/AIP (used for reference only), scaled down so you can read all of it in one sitting.
+
+## Files
+
+| File | What it is |
+|---|---|
+| `Agent.ipynb` | The agent as a Colab notebook |
+| `retail_agent.py` | The same agent as a Python script (terminal or Colab `%run`) |
+| `README.md` | This file |
 
 ---
 
@@ -48,6 +58,8 @@ The agent never touches the data directly. It asks questions through narrow **to
 
 **Object types:** `Supplier`, `Product`, `Store`, `Inventory`, `PurchaseOrder`
 
+`Inventory` is its own object because stock is a fact about a product *in a store*, which neither one can hold alone.
+
 **Links**
 
 | From | Link | To |
@@ -74,30 +86,32 @@ Rules live in the code, not in the prompt, so the model cannot talk its way arou
 ## Getting started
 
 ### Requirements
-- Python 3.9+
+- Python 3.10+
 - A Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) (keys may start with `AQ.` or `AIza`)
 
-### Install
+### Google Colab (easiest)
+1. Click the **Open In Colab** badge above.
+2. Click the key icon, add a secret named `GEMINI_API_KEY`, and turn on notebook access.
+3. Run the cells in order. When asked, type your question; type `quit` to stop.
+
+To use the script instead: upload `retail_agent.py` to Colab, then run
+```python
+!pip install -U google-genai
+%run retail_agent.py --selftest   # no AI, no key needed
+%run retail_agent.py              # interactive agent
+```
+Use `%run`, not `!python`, because the agent asks for typed input (questions and approvals).
+
+### Terminal
 ```bash
 pip install -U google-genai
-```
-
-### Run the self-test (no AI, no key needed)
-```bash
-python retail_agent.py --selftest
-```
-This exercises the ontology, links, actions, approvals and rule violations directly.
-
-### Run the agent
-```bash
-export GEMINI_API_KEY="your-key-here"     # Windows PowerShell: $env:GEMINI_API_KEY="your-key-here"
+python retail_agent.py --selftest      # no AI, no key needed
+export GEMINI_API_KEY="your-key-here"  # Windows PowerShell: $env:GEMINI_API_KEY="your-key-here"
 python retail_agent.py
 ```
-If no key is found, the script prompts for one (input hidden).
+If no key is found, the script asks for one (input hidden). **Never put your key in the code or commit it to GitHub.**
 
-### Google Colab
-1. Upload `Agent.ipynb`.
-2. Add your key as a Colab secret named `GEMINI_API_KEY` and enable notebook access.
+---
 
 ## Example questions
 
@@ -124,7 +138,7 @@ Watch the `tool>` lines in the output: each one is a real lookup in the ontology
 
 ## How the code is organised
 
-| Section in `retail_agent.py` | Purpose |
+| Section | Purpose |
 |---|---|
 | **1. Data** (`DB`) | In-memory objects and properties |
 | **2. Ontology** (`LINKS`, `ACTIONS`) | Link types and rule-checked actions |
@@ -156,6 +170,7 @@ Highlights:
 
 - Data is **in memory**: changes reset when the script restarts.
 - Demo data only (4 products, 3 stores). Do not use real customer data with a free API tier without checking its data terms.
+- The data has no currency; the model may assume one when it answers.
 - One action at a time; no user roles or audit log yet.
 
 ## Roadmap ideas
@@ -163,13 +178,10 @@ Highlights:
 - Load products and inventory from a CSV file
 - Add an audit log of questions, tool calls and approvals
 - Add a Sales object and a demand forecast function
+- Add a graph-database version (for example Neo4j)
 
 ---
 
 ## Key takeaway
 
 > Don't give the AI your database. Give it narrow tools and rule-checked actions. It stops guessing and starts looking things up.
-
-## License
-
-MIT. Add a `LICENSE` file if you publish this.
