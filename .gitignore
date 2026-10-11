@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Dataset, databases and logs (do not publish)
+olist/
+sample/
+archive.zip
+*.csv
+*.db
+audit_log.jsonl
+
+# Secrets
+.env
+*.key
